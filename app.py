@@ -3,16 +3,6 @@ import logging
 from dotenv import load_dotenv
 from gradio_client import Client
 
-# Load environment variables
-load_dotenv()
-
-# Configure logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(message)s',
-                    handlers=[
-                        logging.StreamHandler(),
-                        logging.FileHandler('application.log')
-                    ])
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -59,11 +49,8 @@ def generate_recommendation_prompt(criteria):
 @app.route('/recommend_by_criteria', methods=['POST'])
 def recommend_by_criteria():
     criteria = request.form.to_dict()
-    logging.debug(f"Received recommendation criteria: {criteria}")
-
     # Generate the prompt for Gradio Client
     prompt = generate_recommendation_prompt(criteria)
-    logging.debug(f"Generated recommendation prompt: {prompt}")
 
     # Call Gradio Client for recommendations
     try:
@@ -72,13 +59,11 @@ def recommend_by_criteria():
             api_name="/chat"
         )
         recommendations_html = result.strip()
-        logging.info(f"Received recommendations: {recommendations_html}")
 
         # Render the recommendations as HTML
         return render_template_string(recommendations_html)
 
     except Exception as e:
-        logging.error(f"An error occurred: {str(e)}")
         return render_template('index.html', error="Error retrieving plant suggestions. Please try again later.")
 
 @app.route('/')
