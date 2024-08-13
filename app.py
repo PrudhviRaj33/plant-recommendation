@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, render_template_string
 import logging
-from dotenv import load_dotenv
 from gradio_client import Client
 
 
