@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Finder | Discover the Perfect Plant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
+        }
+        header {
+            background-color: #2c6f41;
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        #planting-ideas-page {
+            margin: 2rem auto;
+            max-width: 900px;
+            padding: 0 1rem;
+        }
+        #planting-ideas-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #planting-ideas-form h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #2c6f41;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-group.full-width {
+            text-align: center;
+        }
+        .form-group button {
+            background-color: #2c6f41;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+        .form-group button:hover {
+            background-color: #244d33;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .recommendations-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        .plant-card {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 320px;
+            text-align: left;
+            font-size: 1rem;
+        }
+        .plant-card h3 {
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: #2c6f41;
+        }
+        .plant-card .label {
+            font-weight: bold;
+            color: #2c6f41;
+            display: inline-block;
+            width: 150px;
+        }
+        .plant-card p {
+            margin: 0.5rem 0;
+            line-height: 1.5;
+        }
+        @media (min-width: 600px) {
+            .recommendations-container {
+                flex-direction: row;
+            }
+        }
+        @media (min-width: 768px) {
+            .recommendations-container {
+                justify-content: space-between;
+            }
+        }
+        /* Loader styles */
+        .loader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .loader .icon {
+            width: 40px;
+            height: 40px;
+            background: #2c6f41;
+            border-radius: 50%;
+            animation: bounce 1s infinite ease-in-out;
+        }
+        .loader .icon:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .loader .icon:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Discover the Perfect Plant for Your Garden</h1>
+</header>
+
+<div id="planting-ideas-page">
+    <p>Use our Planting Ideas Form to discover plants that suit your environment and preferences.<br> Fill out the form below to get personalized plant recommendations!</p>
+    
+    <div id="planting-ideas-form">
+        <h2>Planting Ideas Form</h2>
+        <form id="planting-form" action="/recommend_by_criteria" method="post">
+            <div class="form-group">
+                <label for="climate">Climate:</label>
+                <input type="text" id="climate" name="climate" placeholder="e.g., Tropical, Temperate">
+            </div>
+            <div class="form-group">
+                <label for="soil">Soil Type:</label>
+                <select id="soil" name="soil">
+                    <option value="">Select...</option>
+                    <option value="Loamy">Loamy</option>
+                    <option value="Sandy">Sandy</option>
+                    <option value="Clay">Clay</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sunlight">Sunlight Exposure:</label>
+                <select id="sunlight" name="sunlight">
+                    <option value="">Select...</option>
+                    <option value="Full Sun">Full Sun</option>
+                    <option value="Partial Shade">Partial Shade</option>
+                    <option value="Full Shade">Full Shade</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="space">Space Available (Square Meters):</label>
+                <input type="number" id="space" name="space" placeholder="e.g., 20">
+            </div>
+            <div class="form-group">
+                <label for="preferences">User Preferences:</label>
+                <textarea id="preferences" name="preferences" placeholder="e.g., Low maintenance, fragrant"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="maintenance">Maintenance Level:</label>
+                <select id="maintenance" name="maintenance">
+                    <option value="">Select...</option>
+                    <option value="Low">Low</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="allergies">Allergies:</label>
+                <input type="text" id="allergies" name="allergies" placeholder="e.g., Non-allergenic, Mild allergen">
+            </div>
+            <div class="form-group">
+                <label for="availability">Availability:</label>
+                <select id="availability" name="availability">
+                    <option value="">Select...</option>
+                    <option value="Common">Common</option>
+                    <option value="Rare">Rare</option>
+                    <option value="Seasonal">Seasonal</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="environmental">Environmental Impact:</label>
+                <input type="text" id="environmental" name="environmental" placeholder="e.g., Eco-friendly, Low impact">
+            </div>
+            <div class="form-group">
+                <label for="growth-cycle">Growth Cycle:</label>
+                <input type="text" id="growth-cycle" name="growth-cycle" placeholder="e.g., Annual, Perennial">
+            </div>
+            <div class="form-group full-width">
+                <button type="submit">Get Plant Suggestions</button>
+            </div>
+            <div class="error-message">
+                {% if error %}
+                <p>{{ error }}</p>
+                {% endif %}
+            </div>
+        </form>
+
+        {% if recommendations %}
+        <div class="recommendations-container">
+            {% for plant in plants %}
+            <div class="plant-card">
+                <h3>{{ plant.name }}</h3>
+                <p><span class="label">Climate:</span> {{ plant.climate }}</p>
+                <p><span class="label">Soil Type:</span> {{ plant.soil }}</p>
+                <p><span class="label">Sunlight Exposure:</span> {{ plant.sunlight }}</p>
+                <p><span class="label">Space Required:</span> {{ plant.space }} sq. meters</p>
+                <p><span class="label">Maintenance:</span> {{ plant.maintenance }}</p>
+                <p><span class="label">Allergies:</span> {{ plant.allergies }}</p>
+                <p><span class="label">Availability:</span> {{ plant.availability }}</p>
+                <p><span class="label">Environmental Impact:</span> {{ plant.environmental }}</p>
+                <p><span class="label">Growth Cycle:</span> {{ plant.growth_cycle }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Loader -->
+<div class="loader-overlay" id="loader">
+    <div class="loader">
+        <div class="icon"></div>
+        <div class="icon"></div>
+        <div class="icon"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('planting-form').addEventListener('submit', function() {
+        document.getElementById('loader').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling while loader is active
+    });
+</script>
+
+</body>
+</html>
